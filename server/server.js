@@ -43,6 +43,7 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
 
     var id = req.params.id;
+    console.log('ID Received is  : ',id);
     //validate id using ObjectID
     if(!ObjectID.isValid(id)) {
         return res.status(400).send('Please enter a valid ID');
@@ -51,7 +52,7 @@ app.get('/todos/:id', (req, res) => {
         if(!todo) {
             return res.status(404).send('No such Todo in DB');
         }
-        res.status(200).send(todo);
+        res.status(200).send({todo});
     }).catch((e) => {
         res.status(400).send('Something went wrong. Please check your input again');
     });
