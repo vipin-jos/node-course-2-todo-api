@@ -109,6 +109,32 @@ app.patch('/todos/:id', (req,res) => {
 
 });
 
+// POST /users
+app.post('/users', (req,res) => {
+    console.log(req.body);
+    // Lodash pick - Takes only text and completed varibales from the body of the request
+    var body = _.pick(req.body,['email','password']);
+    // var user = new User({
+    //     email: req.body.email,
+    //     password: req.body.password,
+    // });
+    // var user = new User({
+    //     email: body.email,
+    //     password: body.password
+    // });
+    // Same as above two
+    var user = new User(body);
+    user.save().then(() => {
+        return user.generateAuthToken();
+    }).then((token) => {
+        // This is returned from the promise inside the generateAuthToken method in user.js
+        res.header('x-auth',token).send(user);
+    }).catch((err) => {
+        console.log('could not save user');
+        res.status(400).send(err);
+    });
+});
+
 app.listen(port, () => {
     console.log(`Started on port ${port}`);
 });
